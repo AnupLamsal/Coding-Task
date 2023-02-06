@@ -9,15 +9,16 @@ function Header() {
 
   return (
     <div className="header-main">
-      <h1 className="header-title">CRUD Product</h1>
+      <h1 className="header-title">Task: CRUD Operation</h1>
       <Container>
         <Row className="row-header">
-          <Col>
+          <Col className="col-btn">
             <Button
               variant="primary"
               onClick={() => {
                 navigate("/product");
               }}
+              className="btn-add-prod"
             >
               Add Product
             </Button>

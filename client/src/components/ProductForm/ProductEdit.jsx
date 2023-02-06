@@ -71,7 +71,7 @@ function ProductEdit() {
         >
           Go Back
         </Button>
-        <h1 className="text-center">Edit Product Detail</h1>
+        <h1 className="text-center mt-2">Edit Product Detail</h1>
 
         {!isLoading && isError && message !== "Product updated" && (
           <Alert variant="danger" message={message} />

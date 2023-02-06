@@ -3,13 +3,42 @@
 }
 
 .header-title {
+    width: 98%;
     text-align: center;
     margin: 1rem 0 1rem 0;
 }
 
 .row-header {
     display: flex;
-    width: 60%;
     margin: 0 auto;
-    justify-content: center;
+    width: 55%;
+    justify-content: "center";
+}
+
+@media only screen and (max-width: 900px) {
+    .row-header {
+        display: block;
+    }
+    .col-btn {
+        text-align: center;
+    }
+    .btn-add-prod {
+        margin-bottom: 1rem;
+    }
+    .search-prod {
+        width: 100%;
+    }
+  }
+
+@media only screen and (max-width: 700px) {
+    .hide-md {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .hide-sm {
+        display: none;
+    }
+
 }

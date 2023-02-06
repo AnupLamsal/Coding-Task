@@ -32,9 +32,9 @@ function ProductItem() {
             <th>Id</th>
             <th>Name</th>
             <th>Category</th>
-            <th>Description</th>
-            <th>Created At</th>
-            <th>Status</th>
+            <th className="hide-md">Description</th>
+            <th className="hide-md">Created At</th>
+            <th className="hide-sm">Status</th>
             <th></th>
             <th></th>
           </tr>
@@ -48,12 +48,15 @@ function ProductItem() {
                 <td>{index + 1}</td>
                 <td>{item.product_name}</td>
                 <td>{item.category_name}</td>
-                <td>{item.description}</td>
-                <td>{moment(item.createdAt).format("YYYY-MM-DD")}</td>
-                <td>{item.status}</td>
+                <td className="hide-md">{item.description}</td>
+                <td className="hide-md">
+                  {moment(item.createdAt).format("YYYY-MM-DD")}
+                </td>
+                <td className="hide-sm">{item.status}</td>
                 <td className="text-center">
                   <Button
                     variant="success"
+                    className="edit-prod"
                     onClick={() => navigate(`/product/edit/${item._id}`)}
                   >
                     Edit
@@ -62,6 +65,7 @@ function ProductItem() {
                 <td className="text-center">
                   <Button
                     variant="danger"
+                    className="del-prod"
                     onClick={() => dispatch(deleteProduct(item._id))}
                   >
                     Delete

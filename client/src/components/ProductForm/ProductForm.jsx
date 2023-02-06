@@ -48,7 +48,7 @@ function ProductForm() {
         <Button variant="secondary" onClick={() => navigate("/")}>
           Go Back
         </Button>
-        <h1 className="text-center">Add Product Details</h1>
+        <h1 className="text-center mt-2">Add Product Details</h1>
         {!isLoading && isError && !isSuccess && (
           <Alert variant="danger" message={message} />
         )}
