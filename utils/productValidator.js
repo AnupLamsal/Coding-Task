@@ -1,20 +1,26 @@
-const { check, validationResult } = require("express-validator");
+exports.productValidation = (product, response) => {
+  if (!product.product_name) {
+    response.status(400);
+    throw new Error("Product name is required");
+  }
 
-exports.productValidation = [
-  check("product_name", "Please enter product name").not().isEmpty(),
-  check("category_name", "Please enter category name").not().isEmpty(),
-  check("description", "Please enter description").not().isEmpty(),
-  check("created_by", "Created By should be included").not().isEmpty(),
-  check("status", "Please enter status").not().isEmpty(),
-  (req, res, next) => {
-    const errors = validationResult(req);
+  if (!product.category_name) {
+    response.status(400);
+    throw new Error("Category name is required");
+  }
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  if (!product.description) {
+    response.status(400);
+    throw new Error("Description is required");
+  }
 
-    next();
-  },
-];
+  if (!product.created_by) {
+    response.status(400);
+    throw new Error("Created by is required");
+  }
 
-// exports.productValidate = req => {};
+  if (!product.status) {
+    response.status(400);
+    throw new Error("Product status is required");
+  }
+};

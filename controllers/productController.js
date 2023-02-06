@@ -1,91 +1,96 @@
 const Product = require("../models/productModel");
+const asyncHandler = require("express-async-handler");
+const { productValidation } = require("../utils/productValidator");
 
-const getProducts = async (req, res) => {
-  try {
-    const products = await Product.find({});
+const getProducts = asyncHandler(async (req, res) => {
+  const keyword = req.query.keyword
+    ? {
+        $or: [
+          {
+            product_name: {
+              $regex: req.query.keyword,
+            },
+          },
+          {
+            category_name: {
+              $regex: req.query.keyword,
+            },
+          },
+        ],
+      }
+    : {};
+  const products = await Product.find({ ...keyword });
 
-    res.json({ products });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
+  res.json(products);
+});
+
+const getProductById = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+
+  res.json(product);
+});
+
+const createProduct = asyncHandler(async (req, res) => {
+  const { product_name, category_name, description, created_by, status } =
+    req.body;
+
+  productValidation(
+    { product_name, category_name, description, created_by, status },
+    res
+  );
+
+  const productItem = {
+    product_name,
+    category_name,
+    description,
+    created_by,
+    status,
+  };
+
+  const product = await Product.create(productItem);
+
+  res.status(201).json({ product, msg: "Product created" });
+});
+
+const updateProductById = asyncHandler(async (req, res) => {
+  let product = await Product.findById(req.params.id);
+
+  if (!product) {
+    throw new Error("Product not found");
   }
-};
 
-const getProductById = async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
+  const { product_name, category_name, description, created_by, status } =
+    req.body;
 
-    res.json({ product });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
+  productValidation(
+    { product_name, category_name, description, created_by, status },
+    res
+  );
+
+  product.product_name = product_name;
+  product.category_name = category_name;
+  product.description = description;
+  product.created_by = created_by;
+  product.status = status;
+
+  await product.save();
+
+  res.json({ product, msg: "Product updated" });
+});
+
+const deleteProduct = asyncHandler(async (req, res) => {
+  let product = await Product.findById(req.params.id);
+
+  if (!product) {
+    throw new Error("Product not found");
   }
-};
 
-const createProduct = async (req, res) => {
-  try {
-    const { product_name, category_name, description, created_by, status } =
-      req.body;
+  await product.remove();
 
-    const productItem = {
-      product_name,
-      category_name,
-      description,
-      created_by,
-      status,
-    };
+  let products = await Product.find({});
 
-    const product = await Product.create(productItem);
-
-    res.status(201).json({ product, msg: "Product created" });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
-};
-
-const updateProductById = async (req, res) => {
-  try {
-    let product = await Product.findById(req.params.id);
-
-    if (!product) {
-      return res.status(404).json({ msg: "No product found" });
-    }
-
-    const { product_name, category_name, description, created_by, status } =
-      req.body;
-
-    product.product_name = product_name;
-    product.category_name = category_name;
-    product.description = description;
-    product.created_by = created_by;
-    product.status = status;
-
-    await product.save();
-
-    res.json({ product, msg: "Product updated" });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
-};
-
-const deleteProduct = async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-
-    if (!product) {
-      return res.status(404).json({ msg: "No product found" });
-    }
-
-    await product.remove();
-
-    res.json({ msg: "Product deleted" });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
-};
+  res.json(products);
+});
 
 module.exports = {
   createProduct,
